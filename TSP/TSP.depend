@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1484038795 source:c:\users\tom\documents\github\data_structure_mooc\tsp\main.cpp
+	<iostream>
+	<cstdio>
+
