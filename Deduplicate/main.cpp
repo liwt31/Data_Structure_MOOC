@@ -51,18 +51,13 @@ class Hash{
 
 protected:
     int sz;
-    virtual int HashFunc(const T &t)const=0;
+    int HashFunc(const T &t)const;
 public:
     Hash(int s);    //s should be primal, determined by the user
 //    T* FindPtr(const T &t)const;
     bool Insert(const T &t);
 };
 
-//template<typename T>
-//int Hash<T>::HashFunc(const T t){
-//    srand(t);
-//    return rand()%sz;
-//}
 
 template<typename T>
 Hash<T>::Hash(int s):sz(s){
@@ -72,18 +67,6 @@ Hash<T>::Hash(int s):sz(s){
         occupation[i]=false;
     }
 }
-
-//template<typename T>
-//T* Hash<T>::FindPtr(const T &t)const{
-//    int rank=HashFunc(t);
-//    while(occupation[rank]){
-//        if(bucket[rank]==t){
-//            return bucket+rank;
-//        }
-//        rank++;
-//    }
-//    return NULL;
-//}
 
 template<typename T>
 bool Hash<T>::Insert(const T &t){
@@ -99,15 +82,8 @@ bool Hash<T>::Insert(const T &t){
 }
 
 
-template<typename T>
-class Hash4String:public Hash<T>{
-    int HashFunc(const T &s)const;
-public:
-    Hash4String(int s):Hash<T>(s){};
-};
-
 template<>
-int Hash4String<Word>::HashFunc(const Word &w)const{
+int Hash<Word>::HashFunc(const Word &w)const{
     int result=0;
     for(int i=0;i<w.sz;i++){
         result*=26;
@@ -122,17 +98,15 @@ int Hash4String<Word>::HashFunc(const Word &w)const{
 int main()
 {
     const int sz=1594123;
-    Hash4String<Word> Dic(sz);
-    Hash4String<Word> Redund(sz);
+    Hash<Word> Dic(sz);
+    Hash<Word> Redund(sz);
     int n;
     scanf("%d\n",&n);
     for(int i=0;i<n;i++){
         char s_word[45];
         gets(s_word);
         Word word(s_word);
-//        cout<<"before inserting "<<word.word<<" "<<word.sz<<endl;
         if(!Dic.Insert(word)){
-//            cout<<word.word<<" insert not done"<<endl;
             if(Redund.Insert(word)){
                 puts(word.word);
             }
