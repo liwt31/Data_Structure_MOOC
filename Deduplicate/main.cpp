@@ -5,6 +5,45 @@
 
 using namespace std;
 
+struct Word{
+    char word[45];
+    int sz;
+
+    Word(){};
+    Word(char *s);
+    bool operator==(const Word &w2)const;
+    Word& operator=(const Word &w2);
+};
+
+Word::Word(char *s){
+    sz=strlen(s);
+    for(int i=0;i<sz;i++){
+        word[i]=s[i];
+    }
+    word[sz]=0;
+//    cout<<"size of "<<s<<" is "<<sz<<endl;
+}
+
+bool Word::operator==(const Word &w2)const{
+    if(sz!=w2.sz){
+        return false;
+    }
+    for(int i=0;i<sz;i++){
+        if(word[i]!=w2.word[i]){
+            return false;
+        }
+    }
+    return true;
+}
+
+Word& Word::operator=(const Word &w2){
+    sz=w2.sz;
+    for(int i=0;i<=sz;i++){
+        word[i]=w2.word[i];
+    }
+    return *this;
+}
+
 template<typename T>
 class Hash{
     T *bucket;
@@ -12,11 +51,11 @@ class Hash{
 
 protected:
     int sz;
-    virtual int HashFunc(const T t)=0;
+    virtual int HashFunc(const T &t)const=0;
 public:
     Hash(int s);    //s should be primal, determined by the user
-    T* FindPtr(T t)const;
-    bool Insert(T t);
+//    T* FindPtr(const T &t)const;
+    bool Insert(const T &t);
 };
 
 //template<typename T>
@@ -34,60 +73,69 @@ Hash<T>::Hash(int s):sz(s){
     }
 }
 
+//template<typename T>
+//T* Hash<T>::FindPtr(const T &t)const{
+//    int rank=HashFunc(t);
+//    while(occupation[rank]){
+//        if(bucket[rank]==t){
+//            return bucket+rank;
+//        }
+//        rank++;
+//    }
+//    return NULL;
+//}
+
 template<typename T>
-T* Hash<T>::FindPtr(T t){
+bool Hash<T>::Insert(const T &t){
     int rank=HashFunc(t);
     while(occupation[rank]){
         if(bucket[rank]==t){
-            return bucket+rank;
+            return false;
         }
         rank++;
     }
-    return NULL;
-}
-
-template<typename T>
-bool Hash<T>::Insert(T t){
-    T *t_ptr=FindPtr(t);
-    if(t_ptr){
-        t_ptr=t;
-        return true;
-    }else{
-        return false;
-    }
+    bucket[rank]=t;
+    return occupation[rank]=true;
 }
 
 
 template<typename T>
 class Hash4String:public Hash<T>{
-    int HashFunc(const T s);
+    int HashFunc(const T &s)const;
 public:
     Hash4String(int s):Hash<T>(s){};
 };
 
-template<typename T>
-int Hash4String<T>::HashFunc(const T s){
+template<>
+int Hash4String<Word>::HashFunc(const Word &w)const{
     int result=0;
-    for(unsigned int i=0;i<strlen(s);i++){
+    for(int i=0;i<w.sz;i++){
         result*=26;
-        result+=s[i]-'a';
+        result+=w.word[i]-'a';
     }
     srand(result);
-    return rand()%Hash<T>::sz;
+    return rand()%sz;
 }
+
+
 
 int main()
 {
-    const int sz=1594123
-    Hash4String<char*> Dic(sz);
-    Hash4STring<char*> Redund(sz);
+    const int sz=1594123;
+    Hash4String<Word> Dic(sz);
+    Hash4String<Word> Redund(sz);
     int n;
     scanf("%d\n",&n);
     for(int i=0;i<n;i++){
-        char word[45];
-        gets(word);
+        char s_word[45];
+        gets(s_word);
+        Word word(s_word);
+//        cout<<"before inserting "<<word.word<<" "<<word.sz<<endl;
         if(!Dic.Insert(word)){
-            puts(word);
+//            cout<<word.word<<" insert not done"<<endl;
+            if(Redund.Insert(word)){
+                puts(word.word);
+            }
         }
     }
     return 0;
