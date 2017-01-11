@@ -93,8 +93,6 @@ int Hash<Word>::HashFunc(const Word &w)const{
     return rand()%sz;
 }
 
-
-
 int main()
 {
     const int sz=1594123;
