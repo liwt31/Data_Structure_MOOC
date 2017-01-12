@@ -1,0 +1,12 @@
+# depslib dependency file v1.0
+1484231927 source:d:\data_structure_mooc\temperature\main.cpp
+	<iostream>
+	<cstdio>
+	"temperature_lib.c"
+
+1353554553 d:\data_structure_mooc\temperature\temperature_lib.c
+	<stdio.h>
+	"temperature.h"
+
+1353554553 d:\data_structure_mooc\temperature\temperature.h
+
