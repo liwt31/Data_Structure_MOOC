@@ -5,6 +5,18 @@
 
 using namespace std;
 
+template<typename A,typename B>
+class test{
+    A a;
+    B b;
+    void Foo();
+};
+
+//template<typename A,typename B>
+//void test<A,B>::Foo()<int,int>{
+//    a=b;
+//}
+
 int RandInt(){
     int result=rand()*rand()*rand();
     if(rand()%2){
