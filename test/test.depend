@@ -1,7 +1,5 @@
 # depslib dependency file v1.0
-1484231798 source:d:\data_structure_mooc\test\main.cpp
+1484279189 source:d:\data_structure_mooc\test\main.cpp
 	<iostream>
-	<fstream>
-	<cstdlib>
-	<ctime>
+	<cstring>
 

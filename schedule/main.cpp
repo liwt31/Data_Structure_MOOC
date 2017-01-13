@@ -1,6 +1,6 @@
 #include <iostream>
-#include <cstdlib>
-#include <ctime>
+#include <cstdio>
+#include <cstring>
 
 using namespace std;
 
@@ -20,6 +20,7 @@ public:
     T& operator[](int rank)const{return data[rank];}
     int GetSz()const{return sz;}
     void Print()const;
+    void Reserve(int n);
     T PushBack(T t);
     void Swap(int rank0,int rank1);
 };
@@ -79,6 +80,17 @@ void Vector<T>::Expand(){
 }
 
 template<typename T>
+void Vector<T>::Reserve(int n){
+    capacity=n;
+    T *old_data=data;
+    data=new T[capacity];
+    for(int i=0;i<n;i++){
+        data[i]=old_data[i];
+    }
+    delete [] old_data;
+}
+
+template<typename T>
 T Vector<T>::PushBack(T t){
     Expand();
     data[sz++]=t;
@@ -97,6 +109,7 @@ class PrioriyQueue:public Vector<T>{    //minheap
     using Vector<T>::sz;
     using Vector<T>::capacity;
     using Vector<T>::data;
+    using Vector<T>::Reserve;
 protected:
 
     inline int LChild(int rank)const{return 2*rank+1;}
@@ -107,7 +120,7 @@ protected:
 public:
     using Vector<T>::PushBack;
     using Vector<T>::Swap;
-    PrioriyQueue():Vector<T>(0){};
+    PrioriyQueue(int n=5):Vector<T>(0){Reserve(n);}
     void Heapify();
     T Push(T t);
     T Pop();
@@ -190,17 +203,81 @@ T PrioriyQueue<T>::Pop(){
     return max_prio;
 }
 
+struct Task{
+    unsigned int priority;
+    char name[9];
+
+    Task(){};
+    Task(int p,char *s);
+    bool operator==(Task &t2)const;
+    bool operator<(Task &t2)const;
+    bool operator<=(Task &t2)const{return (*this)<t2||(*this)==t2;}
+    void Print();
+};
+
+Task::Task(int p,char *s):priority(p){
+    unsigned int i;
+    for(i=0;i<strlen(s);i++){
+        name[i]=s[i];
+    }
+    name[i]=0;
+}
+
+bool Task::operator==(Task &t2)const{
+    if(priority!=t2.priority){
+        return false;
+    }else{
+        if(strcmp(name,t2.name)==0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+}
+
+bool Task::operator<(Task &t2)const{
+    if(priority!=t2.priority){
+        return priority<t2.priority;
+    }else{
+        if(strcmp(name,t2.name)<0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+}
+
+void Task::Print(){
+//    printf("%u ",priority);
+    printf("%s\n",name);
+}
+
+
+
 int main()
 {
-    srand(clock());
-    PrioriyQueue<int> q_i;
-    for(int i=0;i<700;i++){
-        q_i.PushBack(rand());
+    int n;int m;
+    cin>>n>>m;
+    PrioriyQueue<Task> pq_task(n);
+    for(int i=0;i<n;i++){
+        int priority;
+        char name[9];
+        scanf("%d ",&priority);
+        gets(name);
+        pq_task.PushBack(Task(priority,name));
     }
-    q_i.Heapify();
-    while(!q_i.Empty()){
-     //   q_i.Print();
-        cout<<"max out: "<<q_i.Pop()<<endl;
+    pq_task.Heapify();
+    for(int i=0;i<m;i++){
+        if(pq_task.Empty()){
+            break;
+        }
+        Task t=pq_task.Pop();
+        t.Print();
+        if(t.priority<0x80000000){
+            t.priority*=2;
+            pq_task.Push(t);
+        }
     }
+
     return 0;
 }
