@@ -16,6 +16,7 @@ public:
     Vector(Vector &v2);
     ~Vector();
     Vector& operator=(Vector &v2);
+    bool Empty()const{return sz==0;}
     T& operator[](int rank)const{return data[rank];}
     int GetSz()const{return sz;}
     void Print()const;
@@ -97,21 +98,32 @@ class PrioriyQueue:public Vector<T>{    //minheap
     using Vector<T>::capacity;
     using Vector<T>::data;
 protected:
-    void Heapify();
+
     inline int LChild(int rank)const{return 2*rank+1;}
     inline int RChild(int rank)const{return 2*(rank+1);}
     inline int Parent(int rank)const{return (rank-1)/2;}
     void PercolateUp(int rank);
     void PercolateDown(int rank);
 public:
+    using Vector<T>::PushBack;
+    using Vector<T>::Swap;
+    PrioriyQueue():Vector<T>(0){};
+    void Heapify();
     T Push(T t);
     T Pop();
 };
 
 template<typename T>
+void PrioriyQueue<T>::Heapify(){
+    for(int i=sz-1;i>=0;i--){
+        PercolateDown(i);
+    }
+}
+
+template<typename T>
 void PrioriyQueue<T>::PercolateUp(int rank){
     while(0<rank&&data[rank]<data[Parent(rank)]){
-        swap(rank,Parent(rank));
+        Swap(rank,Parent(rank));
         rank=Parent(rank);
     }
 }
@@ -119,15 +131,36 @@ void PrioriyQueue<T>::PercolateUp(int rank){
 template<typename T>
 void PrioriyQueue<T>::PercolateDown(int rank){
     while(1){
-        T p_data =&data[rank];
-        T l_data =&data[LChild(rank)];
-        T r_data =&data[RChild(rank)];
-        if(LChild(rank)<sz&&l_data<p_data){
-            Swap(rank,LChild(rank));
-            rank=LChild(rank);
-        }else if(RChild(rank)<sz&&r_data<p_data){
-            Swap(rank,RChild(rank));
-            rank=RChild(rank);
+    //    cout<<sz<<" "<<rank<<endl;
+        T p_data =data[rank];
+        if(LChild(rank)<sz&&RChild(rank)<sz){
+            T l_data =data[LChild(rank)];
+            T r_data =data[RChild(rank)];
+            if(l_data<p_data&&l_data<=r_data){
+                Swap(rank,LChild(rank));
+                rank=LChild(rank);
+            }else if(r_data<p_data&&r_data<l_data){
+                Swap(rank,RChild(rank));
+                rank=RChild(rank);
+            }else{
+                break;
+            }
+        }else if(LChild(rank)<sz){
+            T l_data =data[LChild(rank)];
+            if(l_data<p_data){
+                Swap(rank,LChild(rank));
+                rank=LChild(rank);
+            }else{
+                break;
+            }
+        }else if(RChild(rank)<sz){
+            T r_data =data[RChild(rank)];
+            if(r_data<p_data){
+                Swap(rank,RChild(rank));
+                rank=RChild(rank);
+            }else{
+                break;
+            }
         }else{
             break;
         }
@@ -137,26 +170,37 @@ void PrioriyQueue<T>::PercolateDown(int rank){
 template<typename T>
 T PrioriyQueue<T>::Push(T t){
     PushBack(t);
-    PercolateUp(Vector<T>::sz-1);
+    PercolateUp(sz-1);
     return t;
 }
 
 template<typename T>
 T PrioriyQueue<T>::Pop(){
-    Swap(0,Vector<T>::sz-1);
-    PercolateDown(0);
-    Vector<T>::sz--;
-    return ;
+    T max_prio=data[0];
+ //   cout<<"----------------------"<<endl;
+ //   cout<<"before swap :"<<endl;
+ //   Vector<T>::Print();
+    Swap(0,--sz);
+ //   cout<<"after swap :"<<endl;
+ //   Vector<T>::Print();
+    PercolateDown(0);;
+ //   cout<<"after percolation "<<endl;
+ //   Vector<T>::Print();
+ //   cout<<"----------------------"<<endl;
+    return max_prio;
 }
 
 int main()
 {
     srand(clock());
-    Vector<int> v_i(0);
-    for(int i=0;i<100;i++){
-        v_i.PushBack(rand()*rand());
+    PrioriyQueue<int> q_i;
+    for(int i=0;i<700;i++){
+        q_i.PushBack(rand());
     }
-    v_i.Print();
-    cout<<v_i.GetSz()<<endl;
+    q_i.Heapify();
+    while(!q_i.Empty()){
+     //   q_i.Print();
+        cout<<"max out: "<<q_i.Pop()<<endl;
+    }
     return 0;
 }
