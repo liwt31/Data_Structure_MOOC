@@ -84,7 +84,7 @@ void Vector<T>::Reserve(int n){
     capacity=n;
     T *old_data=data;
     data=new T[capacity];
-    for(int i=0;i<n;i++){
+    for(int i=0;i<sz;i++){
         data[i]=old_data[i];
     }
     delete [] old_data;
@@ -135,46 +135,44 @@ void PrioriyQueue<T>::Heapify(){
 
 template<typename T>
 void PrioriyQueue<T>::PercolateUp(int rank){
-    while(0<rank&&data[rank]<data[Parent(rank)]){
-        Swap(rank,Parent(rank));
+    T bottom=data[rank];
+    while(0<rank&&bottom<data[Parent(rank)]){
+        data[rank]=data[Parent(rank)];
         rank=Parent(rank);
     }
+    data[rank]=bottom;
 }
 
 template<typename T>
 void PrioriyQueue<T>::PercolateDown(int rank){
+    T top =data[rank];
     while(1){
     //    cout<<sz<<" "<<rank<<endl;
-        T p_data =data[rank];
-        if(LChild(rank)<sz&&RChild(rank)<sz){
+        if(RChild(rank)<sz){
             T l_data =data[LChild(rank)];
             T r_data =data[RChild(rank)];
-            if(l_data<p_data&&l_data<=r_data){
-                Swap(rank,LChild(rank));
+            if(l_data<top&&l_data<=r_data){
+                data[rank]=l_data;
                 rank=LChild(rank);
-            }else if(r_data<p_data&&r_data<l_data){
-                Swap(rank,RChild(rank));
+            }else if(r_data<top&&r_data<l_data){
+                data[rank]=r_data;
                 rank=RChild(rank);
             }else{
-                break;
+                data[rank]=top;
+                return;
             }
         }else if(LChild(rank)<sz){
             T l_data =data[LChild(rank)];
-            if(l_data<p_data){
-                Swap(rank,LChild(rank));
-                rank=LChild(rank);
+            if(l_data<top){
+                data[rank]=l_data;
+                data[LChild(rank)]=top;
+                return;
             }else{
-                break;
-            }
-        }else if(RChild(rank)<sz){
-            T r_data =data[RChild(rank)];
-            if(r_data<p_data){
-                Swap(rank,RChild(rank));
-                rank=RChild(rank);
-            }else{
-                break;
+                data[rank]=top;
+                return;
             }
         }else{
+            data[rank]=top;
             break;
         }
     }
@@ -256,9 +254,11 @@ void Task::Print(){
 
 int main()
 {
+    setvbuf(stdin, new char[1<<20],_IOFBF,1<<20);
+    setvbuf(stdout, new char[1<<20],_IOFBF,1<<20);
     int n;int m;
     cin>>n>>m;
-    PrioriyQueue<Task> pq_task(n);
+    PrioriyQueue<Task> pq_task(n+3);
     for(int i=0;i<n;i++){
         int priority;
         char name[9];
