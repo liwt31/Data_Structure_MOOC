@@ -1,25 +1,29 @@
 #include <cstdio>
 #include <cstring>
 #include <cmath>
+#include <cstdlib>
 
 using namespace std;
 
-long long Pow(int x,int n){
-    long long result=1;
-    for(int i=0;i<n;i++){
-        result*=x;
+long long HashInt(int a,int b){
+    long long result=b+1;
+    for(int i=0;i<b;i++){
+        result*=a+13;
     }
-    return result;
+    return result+a;
 }
 
 long long Hash(char * str){
     long long hash=0;
+    long long sum=0;
     int sz=strlen(str);
     for(int i=0;i<sz-1;i++){
-        hash^=Pow(str[i+1]-str[i],str[i]-'A');
+        hash^=HashInt(str[i]-'A',str[i+1]-'A');
+        sum+=str[i];
     }
-    hash^=Pow(str[0]-str[sz-1],str[sz-1]-'A');
-    return hash;
+    hash^=HashInt(str[sz-1]-'A',str[0]-'A');
+    sum+=str[sz-1];
+    return hash+sum;
 }
 
 int main()

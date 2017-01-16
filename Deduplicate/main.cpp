@@ -95,6 +95,8 @@ int Hash<Word>::HashFunc(const Word &w)const{
 
 int main()
 {
+    setvbuf(stdin, new char[1<<20],_IOFBF,1<<20);
+    setvbuf(stdout, new char[1<<20],_IOFBF,1<<20);
     const int sz=1594123;
     Hash<Word> Dic(sz);
     Hash<Word> Redund(sz);
