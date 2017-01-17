@@ -5,6 +5,16 @@ using namespace std;
 
 typedef int Rank;
 
+Rank Search(const int *int_array,Rank begin,Rank end,int target){//backward search
+    Rank i;
+    for(i=end-1;i!=begin-1;i--){
+        if(int_array[i]==target){
+            return i;
+        }
+    }
+    return i;
+}
+
 void Rebuild(int *pre,Rank pre_begin,Rank pre_end,int *post,Rank post_begin,Rank post_end,int *in,Rank in_begin, Rank in_end, Rank* pre_index){
     if(pre_end-pre_begin==1&&in_end-in_begin==1){
         in[in_begin]=pre[pre_begin];
@@ -24,6 +34,8 @@ void Rebuild(int *pre,Rank pre_begin,Rank pre_end,int *post,Rank post_begin,Rank
 
 int main()
 {
+	setvbuf(stdin, new char[1<<20],_IOFBF,1<<20);
+    setvbuf(stdout, new char[1<<20],_IOFBF,1<<20);
     int n;cin>>n;
     int *pre=new int[n];
     for(int i=0;i<n;i++){
