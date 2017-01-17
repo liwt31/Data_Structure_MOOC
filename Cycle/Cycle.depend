@@ -1,7 +1,0 @@
-# depslib dependency file v1.0
-1484538206 source:d:\data_structure_mooc\cycle\main.cpp
-	<cstdio>
-	<cstring>
-	<cmath>
-	<cstdlib>
-

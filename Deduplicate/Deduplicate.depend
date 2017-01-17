@@ -1,7 +1,0 @@
-# depslib dependency file v1.0
-1484143729 source:d:\data_structure_mooc\deduplicate\main.cpp
-	<iostream>
-	<cstdio>
-	<cstdlib>
-	<cstring>
-
