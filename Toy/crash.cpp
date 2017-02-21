@@ -1,5 +1,5 @@
 //the program will crash in linux
-//in Hashfunc i starts from 1 instead of 0, leads to bucket cluster
+//in Hashfunc() i starts from 1 instead of 0, which leads to bucket cluster
 //question asked on stackoverflow
 #include <iostream>
 #include <cstdlib>
