@@ -34,7 +34,7 @@ void Rebuild(int *pre,Rank pre_begin,Rank pre_end,int *post,Rank post_begin,Rank
 
 int main()
 {
-	setvbuf(stdin, new char[1<<20],_IOFBF,1<<20);
+    setvbuf(stdin, new char[1<<20],_IOFBF,1<<20);
     setvbuf(stdout, new char[1<<20],_IOFBF,1<<20);
     int n;cin>>n;
     int *pre=new int[n];
