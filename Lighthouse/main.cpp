@@ -6,8 +6,6 @@ using namespace std;
 
 struct Point{
     int x,y;
-//    Point(int xx,int yy):x(xx),y(yy){};
-//    Point(){};
     bool operator<(Point& p2){return x<p2.x;}
     bool operator<=(Point& p2){return x<=p2.x;}
     Point& operator=(Point& p2){x=p2.x;y=p2.y;return *this;}
