@@ -14,7 +14,6 @@ struct Vertex{
     Vstatus v_s;
 
     Vertex():edge(NULL),in_degree(0),d_from_beg(0),v_s(UNDISCOVERED){};
-//    ~Vertex();
     void AddEdge(Vertex* v_dst);
 };
 
@@ -25,14 +24,6 @@ struct Edge{
 
     Edge* InsertEdgeBefore(Vertex* v_dst);
 };
-
-//Vertex::~Vertex(){
-//    while(edge){
-//        Edge* old_edge=edge;
-//        edge=edge->next_edge;
-//        delete old_edge;
-//    }
-//}
 
 void Vertex::AddEdge(Vertex* v_dst){
     if(edge){
@@ -61,7 +52,6 @@ class Graph{
     int sz;
 public:
     Graph(int n);
-//    ~Graph();
     Vertex* GetVertex(int r)const{return vec_vertex+r;}
     int Tsp();
 };
@@ -71,24 +61,16 @@ Graph::Graph(int n){
     sz=n;
 }
 
-//Graph::~Graph(){
-//    delete vec_vertex;
-//}
-
 int Graph::TSP_rec(Vertex *parent){
     parent->v_s=VISITED;
     int dst=parent->d_from_beg;
-//    cout<<dst<<endl;
     for(Edge* edge=parent->edge;edge!=NULL;edge=edge->next_edge){
-//        cout<<"enter edge cycle"<<endl;
         Vertex* child=edge->dst;
         child->in_degree--;
-//        cout<<"child: "<<child->d_from_beg<<"  parent: "<<parent->d_from_beg<<endl;
         if(child->d_from_beg<parent->d_from_beg+1){
-//            cout<<"enter increase d_from_beg branch"<<endl;
             child->d_from_beg=parent->d_from_beg+1;
         }
-        if(child->v_s==UNDISCOVERED&&child->in_degree==0){  //若可以当做下一个点进行伸展
+        if(child->v_s==UNDISCOVERED&&child->in_degree==0){  //鑻ュ彲浠ュ綋鍋氫笅涓�涓偣杩涜浼稿睍
             int new_dst=TSP_rec(child);
             dst=new_dst>dst? new_dst:dst;
         }
@@ -96,7 +78,7 @@ int Graph::TSP_rec(Vertex *parent){
     return dst;
 }
 
-int Graph::TSP(Vertex* v_beg){  //只需要考虑一颗生成树
+int Graph::TSP(Vertex* v_beg){  //Only consider one stree
 
     return TSP_rec(v_beg)+1;//num of villages is 1 greater than total distance
 }
@@ -109,7 +91,6 @@ int Graph::Tsp(){
             if((vec_vertex+j)->v_s==UNDISCOVERED&&(vec_vertex+j)->in_degree==0){
                 flag=0;
                 int dst=TSP(vec_vertex+j);
-//                cout<<"enter outer cycle, dst got: "<<dst<<endl;
                 max=max>dst? max:dst;
             }
         }
